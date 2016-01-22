@@ -16,10 +16,11 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 from monitorServer.views import index
-from cardiac.views import dades
+from cardiac.views import dades,chart
 
 urlpatterns = [
     url(r'^$',index),
     url(r'^dades/', dades),
+    url(r'^chart/', chart),
     url(r'^admin/', admin.site.urls),
 ]
