@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block menu %}
+{% include 'menu.html' %}
+{% endblock%}
+
+{% block principal %}
+<div class="panel panel-default">
+  <!-- Default panel contents -->
+  <div class="panel-heading">LLISTAT DE REGISTRES: </div>
+
+  <!-- Table -->
+  <table class="table">
+<tr>
+<th> ID</th>
+<th> AGE</th>
+<th> HEIGHT</th>
+<th> WEIGHT</th>
+</tr>
+ 
+		{% for user in usuari %}
+	<tr>
+   	<td><a href="/chart2/{{ user.id }}">{{ user.id }}</a></li>
+	<td> {{ user.id }} </td>
+	<td> {{ user.age }} </td>
+	<td> {{ user.height }} </td>
+	<td> {{ user.weight }} </td>
+   	<td><a href="/borrar/{{ user.id }}">borrar</a></li>
+	</tr>
+	{% endfor %}
+  </table>
+</div>
+{% endblock %}

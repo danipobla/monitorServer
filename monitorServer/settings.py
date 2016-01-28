@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'chartit',
     'cardiac',
+    'django_nvd3',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -111,7 +112,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'es-Es'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Madrid'
 
 USE_I18N = True
 
@@ -126,3 +127,6 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 #STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+
+
