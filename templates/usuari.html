@@ -12,19 +12,28 @@
   <!-- Table -->
   <table class="table">
 <tr>
-<th> ID</th>
+<th> GRAFICA</th>
+<th> GRAFICA</th>
 <th> AGE</th>
 <th> HEIGHT</th>
 <th> WEIGHT</th>
+<th> MAX HR</th>
+<th> MIN HR</th>
+<th> AVG HR</th>
+<th> BORRAR</th>
+
 </tr>
  
 		{% for user in usuari %}
 	<tr>
-   	<td><a href="/chart2/{{ user.id }}">{{ user.id }}</a></li>
-	<td> {{ user.id }} </td>
+   	<td><a href="/chart2/{{ user.id }}">veure</a></li>
+   	<td><a href="/chart_zoom/{{ user.id }}">zoom</a></li>
 	<td> {{ user.age }} </td>
 	<td> {{ user.height }} </td>
 	<td> {{ user.weight }} </td>
+	<td> {{ user.maxim }} </td>
+	<td> {{ user.minim }} </td>
+	<td> {{ user.average }} </td>
    	<td><a href="/borrar/{{ user.id }}">borrar</a></li>
 	</tr>
 	{% endfor %}

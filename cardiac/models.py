@@ -4,9 +4,12 @@ from django.db import models
 
 class Health(models.Model):
 	user = models.ForeignKey(User)
-	age = models.IntegerField()
-	height = models.IntegerField()
-	weight = models.IntegerField()
+	age = models.IntegerField(null=True)
+	height = models.IntegerField(null=True)
+	weight = models.IntegerField(null=True)
+	maxim = models.IntegerField(null=True)
+	minim = models.IntegerField(null=True)
+	average = models.IntegerField(null=True)
 
 class Hrm(models.Model):
 	date = models.DateTimeField()

@@ -11,11 +11,7 @@
 <script type="text/javascript" src='{% static 'nvd3/nv.d3.min.js' %}'></script>
 
 {% load nvd3_tags %}
-<center><h1>GRÀFICA INICIAL</h1></center>
     {% load_chart charttype chartdata chartcontainer extra %}
     {% include_container chartcontainer 400 '100%' %}
-<center><h1>GRÀFICA ZOOM</h1></center>
-    {% load_chart charttype1 chartdata chartcontainer1 extra1 %}
-    {% include_container chartcontainer1 400 '100%' %}
 
 {% endblock %}

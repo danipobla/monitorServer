@@ -12,6 +12,7 @@ from nvd3 import lineWithFocusChart
 import random
 import datetime
 import time
+from django.db.models import Avg,Max,Min
 
 @csrf_exempt
 def dades(request):
@@ -24,6 +25,12 @@ def dades(request):
  		hrm=Hrm(health=Health.objects.get(id=health.id),date=(i['date']),hr=int(i['hr']),state=i['state'],intensity=i['intensity'],comment=i['comment'])
 		hrm.save()	
 
+	mma=Hrm.objects.filter(health=health.id).aggregate(Max('hr'),Min('hr'),Avg('hr'))
+	health.maxim=mma['hr__max']
+	health.minim=mma['hr__min']
+	health.average=mma['hr__avg']
+	health.save()
+	
 	return HttpResponse("OK")
 
 def chart(request):
@@ -72,17 +79,51 @@ def chart2(request,chart=0):
 	                 'name1':'HRM','y1': ydata,
 	                 'name2':'MOV','y2': ydata2,}
 	    charttype = "lineChart"
-	    charttype1 = "lineWithFocusChart"
 	    chartcontainer = "chart_container"
-	    chartcontainer1 = "chart_container1"
 	    chartdata1 = chartdata
 	    data = {
 	        'charttype': charttype,
 	        'chartdata': chartdata,
 		'chartcontainer':chartcontainer,
-	        'charttype1': charttype1,
-	        'chartdata1': chartdata1,
-		'chartcontainer1':chartcontainer1,
+		'extra': {
+	            'x_is_date': True,
+	            'x_axis_format': '%H:%M:%S',
+		    'tag_script_js': True,
+	            'jquery_on_ready': False,
+	        },
+		'extra1': {
+	            'x_is_date': True,
+	            'x_axis_format': '%H:%M:%S',
+		    'tag_script_js': True,
+	            'jquery_on_ready': False,
+	        },
+	    }
+	    return render_to_response('chart2.html', data)
+
+
+def chart_zoom(request,chart=0):
+        if not request.user.is_authenticated():
+                return render(request,'error.html')
+        else:
+  	    hrm_data=Hrm.objects.filter(health=Health.objects.get(id=chart))
+	    xdata=[]
+	    ydata2=[]
+	    ydata=[]
+	    for i in hrm_data:
+		xdata.append(int(time.mktime(i.date.timetuple()) * 1000))
+		ydata2.append(int(float(i.intensity)))
+		ydata.append(i.hr)
+
+	    chartdata = {'x': xdata, 
+	                 'name1':'HRM','y1': ydata,
+	                 'name2':'MOV','y2': ydata2,}
+	    charttype = "lineWithFocusChart"
+	    chartcontainer = "chart_container"
+	    chartdata1 = chartdata
+	    data = {
+	        'charttype': charttype,
+	        'chartdata': chartdata,
+		'chartcontainer':chartcontainer,
 		'extra': {
 	            'x_is_date': True,
 	            'x_axis_format': '%H:%M:%S',
@@ -112,3 +153,4 @@ def borrar(request,id=0):
   	        Hrm.objects.filter(health=id).delete()
 		Health.objects.get(id=id).delete()
 		return redirect('/usuari/')
+
