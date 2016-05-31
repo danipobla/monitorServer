@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'chartit',
     'cardiac',
+    'bokeh',
     'django_nvd3',
 ]
 
