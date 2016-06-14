@@ -12,11 +12,9 @@
   <!-- Table -->
   <table class="table">
 <tr>
-<th> DATA</th>
+<th> DATE</th>
 <th> BOKEH-HR</th>
 <th> BOKEH-HRV</th>
-<th> NVD3</th>
-<th> CHARTIT</th>
 <th> AGE</th>
 <th> HEIGHT</th>
 <th> WEIGHT</th>
@@ -24,6 +22,7 @@
 <th> MIN HR</th>
 <th> AVG HR</th>
 <th> AVG HRV</th>
+<th> DATE END</th>
 <th> BORRAR</th>
 
 </tr>
@@ -33,8 +32,6 @@
 	<td> {{ user.date }} </td>
    	<td><a href="/chart/{{ user.id }}">veure</a></li>
    	<td><a href="/chart4/{{ user.id }}">veure</a></li>
-   	<td><a href="/chart2/{{ user.id }}">veure</a></li>
-   	<td><a href="/chart3/{{ user.id }}">veure</a></li>
 	<td> {{ user.age }} </td>
 	<td> {{ user.height }} </td>
 	<td> {{ user.weight }} </td>
@@ -42,6 +39,7 @@
 	<td> {{ user.minim }} </td>
 	<td> {{ user.averagehr }} </td>
 	<td> {{ user.averagehrv }} </td>
+	<td> {{ user.datend }} </td>
    	<td><a href="/borrar/{{ user.id }}">borrar</a></li>
 	</tr>
 	{% endfor %}

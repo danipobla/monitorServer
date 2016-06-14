@@ -28,6 +28,7 @@ class Health(models.Model):
 	minim = models.IntegerField(null=True)
 	averagehr = models.IntegerField(null=True)
 	averagehrv = models.IntegerField(null=True)
+	datend = models.DateTimeField(null=True)
 
 class Hrm(models.Model):
 	date = models.DateTimeField()

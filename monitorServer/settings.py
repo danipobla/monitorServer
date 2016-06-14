@@ -74,6 +74,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'monitorServer.wsgi.application'
 
+ADMIN_MEDIA_PREFIX = '/adminmedia/'
 
 # Database
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases
@@ -113,7 +114,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'es-Es'
 
-TIME_ZONE = 'Europe/Madrid'
+TIME_ZONE = 'UTC'
 
 USE_I18N = True
 

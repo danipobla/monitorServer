@@ -20,14 +20,14 @@ from bokeh.models import ColumnDataSource,HoverTool, Range1d,LinearAxis
 def dades(request):
 	json_data = request.read()
 	data = json.loads(json_data)
-	health = Health(date=data['hrm'][0]['date'],user=User.objects.get(id=int(data['user'])), age=int(data['age']),height=int(data['height']),weight=int(data['weight']))
+	health = Health(date=data['hrm'][0]['date'],datend=data['hrm'][-1]['date'],user=User.objects.get(id=int(data['user'])), age=int(data['age']),height=int(data['height']),weight=int(data['weight']))
 	health.save()
 
 	for i in data['hrm']:
- 		hrm=Hrm(health=Health.objects.get(id=health.id),date=(i['date']),hr=int(i['hr']),hrv=int(i['hrv']),intensity=i['intensity'],comment=i['comment'])
+ 		hrm=Hrm(health=Health.objects.get(id=health.id),date=(i['date']),hr=int(i['hr']),hrv=int(i['hrv']),intensity=int(i['intensity']),comment=i['comment'])
 		hrm.save()	
 
-	mma=Hrm.objects.filter(health=health.id).aggregate(Max('hr'),Min('hr'),Avg('hr'),Avg('hrv'))
+	mma=Hrm.objects.filter(health=health.id,hrv__lte=1950,hrv__gte=10,hr__gte=1).aggregate(Max('hr'),Min('hr'),Avg('hr'),Avg('hrv'))
 	health.maxim=mma['hr__max']
 	health.minim=mma['hr__min']
 	health.averagehr=mma['hr__avg']
@@ -40,7 +40,7 @@ def chart4(request,chart=0):
         if not request.user.is_authenticated():
                 return render(request,'error.html')
         else:
-  	        hrm_data=Hrm.objects.filter(health=Health.objects.get(id=chart))
+  	        hrm_data=Hrm.objects.filter(health=Health.objects.get(id=chart),hrv__lte=1950,hrv__gte=10)
     		xdata=[]
  		ymov=[]
     		yhr=[]
@@ -53,7 +53,7 @@ def chart4(request,chart=0):
 			if (str(i.comment)==""):
 				 ycomment.append(float('nan'))
 			else:
-				 ycomment.append(i.hr)
+				 ycomment.append(i.hrv)
  
 			comment.append(i.comment)
 
@@ -77,23 +77,26 @@ def chart4(request,chart=0):
 
     		hover = HoverTool(
         		tooltips=[
-            			("data", "@x"),
-            			("valor", "@y"),
+            			("HRV", "@y"),
             			("comment", "@c"),
         		]
     		)
 
-    		plot = figure(title="HR MESUREMENT",x_axis_type="datetime", y_range=(900,1100),tools=[hover, 'pan', 'wheel_zoom','box_zoom','reset','resize','save'],plot_width=1000, plot_height=600)
+    		plot = figure(title="HRV MESUREMENT",x_axis_type="datetime", y_range=(900,1100),tools=[hover, 'pan', 'wheel_zoom','box_zoom','reset','resize','save'],plot_width=1000, plot_height=600)
+		plot.xaxis.axis_label = 'Time (ms)'
+		plot.yaxis.axis_label = 'Heart Rate Variability (ms)'
+		
 		plot.circle(x=xdata, y=ycomment, source=source2,color="orange", fill_color="red", size=14,legend="Comentari")
-		plot.line(x=xdata, y=yhr,source=source, color="red", legend="Heart Rate")
+		plot.line(x=xdata, y=yhr,source=source, color="red", legend="Heart Rate Variability")
     		plot.extra_y_ranges = {"foo": Range1d(start=0, end=30)}
-    		plot.line(x=xdata, y=ymov, color="blue", legend="Moviment",y_range_name="foo")
-    		plot.add_layout(LinearAxis(y_range_name="foo",axis_label="MOVIMENT"), 'right')
+    		plot.line(x=xdata, y=ymov, color="blue", legend="Movement",y_range_name="foo")
+    		plot.add_layout(LinearAxis(y_range_name="foo",axis_label="Movement (m/s2)"), 'right')
 
-		plot.xaxis.axis_label = 'Time'
-		plot.yaxis.axis_label = 'Heart Rate'
 		script, div = components(plot, CDN)
-    		return render(request, "chart.html", {"the_script":script, "the_div":div})
+		if Master.objects.filter(user=request.user.id).exists():
+			return render(request, "chart_master.html", {"the_script":script, "the_div":div})
+		else:
+			return render(request, "chart.html", {"the_script":script, "the_div":div})
 
 
 def chart(request,chart=0):
@@ -137,21 +140,20 @@ def chart(request,chart=0):
 
     		hover = HoverTool(
         		tooltips=[
-            			("data", "@x"),
-            			("valor", "@y"),
+            			("HR", "@y"),
             			("comment", "@c"),
         		]
     		)
 
     		plot = figure(title="HR MESUREMENT",x_axis_type="datetime", y_range=(0,220),tools=[hover, 'pan', 'wheel_zoom','box_zoom','reset','resize','save'],plot_width=1000, plot_height=600)
-		plot.circle(x=xdata, y=ycomment, source=source2,color="orange", fill_color="red", size=14,legend="Comentari")
+	 	plot.yaxis.axis_label = 'Heart Rate (bpm)'
+		plot.circle(x=xdata, y=ycomment, source=source2,color="orange", fill_color="red", size=14,legend="Comment")
 		plot.line(x=xdata, y=yhr,source=source, color="red", legend="Heart Rate")
     		plot.extra_y_ranges = {"foo": Range1d(start=0, end=30)}
     		plot.line(x=xdata, y=ymov, color="blue", legend="Movement",y_range_name="foo")
-    		plot.add_layout(LinearAxis(y_range_name="foo",axis_label="Movement"), 'right')
+    		plot.add_layout(LinearAxis(y_range_name="foo",axis_label="Movement (m/s2)"), 'right')
 
-		plot.xaxis.axis_label = 'Time'
-		plot.yaxis.axis_label = 'Heart Rate'
+		plot.xaxis.axis_label = 'Time (ms)'
 		script, div = components(plot, CDN)
     		
 
@@ -238,6 +240,15 @@ def master(request):
 	   	usuari=Health.objects.filter(user=request.user.id).order_by('-id')
     		return render_to_response('master.html', {'usuari':usuari})
 
+def usuari_master(request,id=0):
+        if not request.user.is_authenticated():
+                return render(request,'error.html')
+        else:
+		if (id==0):
+			id=request.user.id
+
+	   	usuari=Health.objects.filter(user=id).order_by('-id')
+		return render_to_response('usuari_master.html', {'usuari':usuari})
 def usuari(request,id=0):
         if not request.user.is_authenticated():
                 return render(request,'error.html')

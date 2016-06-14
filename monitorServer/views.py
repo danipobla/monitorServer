@@ -23,7 +23,7 @@ def entrar(request):
 
 def sortir(request):
         auth.logout(request)
-        return render(request,'index.html')
+        return redirect('/')
 
 @csrf_exempt
 def login(request):

@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block menu %}
-{% include 'menu.html' %}
+{% include 'menu_master.html' %}
 {% endblock%}
 
 {% block principal %}
@@ -23,7 +23,6 @@
 <th> AVG HR</th>
 <th> AVG HRV</th>
 <th> DATEND</th>
-<th> BORRAR</th>
 
 </tr>
  
@@ -40,7 +39,6 @@
 	<td> {{ user.averagehr }} </td>
 	<td> {{ user.averagehrv }} </td>
 	<td> {{ user.datend }} </td>
-   	<td><a href="/borrar/{{ user.id }}">borrar</a></li>
 	</tr>
 	{% endfor %}
   </table>
