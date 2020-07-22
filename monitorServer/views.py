@@ -2,7 +2,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render,redirect
 from django.contrib import auth
 from django.http import HttpResponse
-from cardiac.models import Master
+from cardiac.models import Main
 import json
 
 def index(request):
@@ -14,8 +14,8 @@ def entrar(request):
         user = auth.authenticate(username=usuari, password=clau)
         if user is not None and user.is_active:
                 auth.login(request,user)
-		if Master.objects.filter(user=user.id).exists():
-			return redirect ('/master/')
+		if Main.objects.filter(user=user.id).exists():
+			return redirect ('/main/')
 		else:
 			return redirect ('/usuari/', id=request.user.id)
         else:

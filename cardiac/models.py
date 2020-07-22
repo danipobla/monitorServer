@@ -2,7 +2,7 @@ from __future__ import unicode_literals
 from django.contrib.auth.models import User
 from django.db import models
 
-class Master(models.Model):
+class Main(models.Model):
 	user = models.ForeignKey(User)
         class Meta:
                 ordering = ['user']
@@ -10,17 +10,17 @@ class Master(models.Model):
                 return unicode(self.user)
 	
 class Relation(models.Model):
-	master= models.ForeignKey(Master)
-	slave = models.ManyToManyField(User)
+	main= models.ForeignKey(Main)
+	subordinate = models.ManyToManyField(User)
         class Meta:
-                ordering = ['master']
+                ordering = ['main']
         def __unicode__(self):
-                return unicode(self.master)
+                return unicode(self.main)
 
 class Health(models.Model):
 	date = models.DateTimeField(null=True)
 	user = models.ForeignKey(User)
-	master = models.ForeignKey(Master,null=True)
+	main = models.ForeignKey(Main,null=True)
 	age = models.IntegerField(null=True)
 	height = models.IntegerField(null=True)
 	weight = models.IntegerField(null=True)

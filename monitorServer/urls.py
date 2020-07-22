@@ -1,14 +1,14 @@
 from django.conf.urls import url
 from django.contrib import admin
 from monitorServer.views import index,entrar,sortir,login
-from cardiac.views import dades,chart,chart2,chart3, chart4, usuari, usuari_master, master, borrar, seguiment
+from cardiac.views import dades,chart,chart2,chart3, chart4, usuari, usuari_main, main, borrar, seguiment
 urlpatterns = [
     url(r'^$',index),
     url(r'^dades/', dades),
     url(r'^usuari/$', usuari),
     url(r'^usuari/(?P<id>\w+)/', usuari),
-    url(r'^usuari_master/(?P<id>\w+)/', usuari_master),
-    url(r'^master/', master),
+    url(r'^usuari_main/(?P<id>\w+)/', usuari_main),
+    url(r'^main/', main),
     url(r'^seguiment/', seguiment),
     url(r'^chart/(?P<chart>\w+)/', chart),
     url(r'^chart2/(?P<chart>\w+)/', chart2),

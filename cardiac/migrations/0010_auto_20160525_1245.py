@@ -16,7 +16,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Master',
+            name='Main',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
@@ -24,7 +24,7 @@ class Migration(migrations.Migration):
         ),
         migrations.AddField(
             model_name='health',
-            name='master',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='cardiac.Master'),
+            name='main',
+            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='cardiac.Main'),
         ),
     ]

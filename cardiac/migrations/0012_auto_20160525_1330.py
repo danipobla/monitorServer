@@ -13,11 +13,11 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.AlterModelOptions(
-            name='master',
+            name='main',
             options={'ordering': ['user']},
         ),
         migrations.AlterModelOptions(
             name='relation',
-            options={'ordering': ['master']},
+            options={'ordering': ['main']},
         ),
     ]
