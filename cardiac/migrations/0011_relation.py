@@ -19,8 +19,8 @@ class Migration(migrations.Migration):
             name='Relation',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('master', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='cardiac.Master')),
-                ('slave', models.ManyToManyField(to=settings.AUTH_USER_MODEL)),
+                ('main', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='cardiac.Main')),
+                ('subordinate', models.ManyToManyField(to=settings.AUTH_USER_MODEL)),
             ],
         ),
     ]

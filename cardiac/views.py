@@ -1,7 +1,7 @@
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render,redirect
 from django.http import HttpResponse
-from cardiac.models import Health,Hrm,Relation,Master
+from cardiac.models import Health,Hrm,Relation,Main
 from django.contrib.auth.models import User
 from django.utils import timezone
 import json
@@ -93,8 +93,8 @@ def chart4(request,chart=0):
     		plot.add_layout(LinearAxis(y_range_name="foo",axis_label="Movement (m/s2)"), 'right')
 
 		script, div = components(plot, CDN)
-		if Master.objects.filter(user=request.user.id).exists():
-			return render(request, "chart_master.html", {"the_script":script, "the_div":div})
+		if Main.objects.filter(user=request.user.id).exists():
+			return render(request, "chart_main.html", {"the_script":script, "the_div":div})
 		else:
 			return render(request, "chart.html", {"the_script":script, "the_div":div})
 
@@ -157,8 +157,8 @@ def chart(request,chart=0):
 		script, div = components(plot, CDN)
     		
 
-		if Master.objects.filter(user=request.user.id).exists():
-			return render(request, "chart_master.html", {"the_script":script, "the_div":div})
+		if Main.objects.filter(user=request.user.id).exists():
+			return render(request, "chart_main.html", {"the_script":script, "the_div":div})
 		else:
 			return render(request, "chart.html", {"the_script":script, "the_div":div})
 			
@@ -230,17 +230,17 @@ def seguiment(request):
         if not request.user.is_authenticated():
                 return render(request,'error.html')
         else:
-	   	usuari=Relation.objects.filter(master=Master.objects.get(user=request.user.id)).values_list('slave__id','slave__username','slave__first_name','slave__last_name')
+	   	usuari=Relation.objects.filter(main=Main.objects.get(user=request.user.id)).values_list('subordinate__id','subordinate__username','subordinate__first_name','subordinate__last_name')
 		return render_to_response('seguiment.html', {'usuari':usuari})
 
-def master(request):
+def main(request):
         if not request.user.is_authenticated():
                 return render(request,'error.html')
         else:
 	   	usuari=Health.objects.filter(user=request.user.id).order_by('-id')
-    		return render_to_response('master.html', {'usuari':usuari})
+    		return render_to_response('main.html', {'usuari':usuari})
 
-def usuari_master(request,id=0):
+def usuari_main(request,id=0):
         if not request.user.is_authenticated():
                 return render(request,'error.html')
         else:
@@ -248,7 +248,7 @@ def usuari_master(request,id=0):
 			id=request.user.id
 
 	   	usuari=Health.objects.filter(user=id).order_by('-id')
-		return render_to_response('usuari_master.html', {'usuari':usuari})
+		return render_to_response('usuari_main.html', {'usuari':usuari})
 def usuari(request,id=0):
         if not request.user.is_authenticated():
                 return render(request,'error.html')
@@ -257,8 +257,8 @@ def usuari(request,id=0):
 			id=request.user.id
 
 	   	usuari=Health.objects.filter(user=id).order_by('-id')
-		if Master.objects.filter(user=request.user.id).exists():
-			return render_to_response('master.html', {'usuari':usuari})
+		if Main.objects.filter(user=request.user.id).exists():
+			return render_to_response('main.html', {'usuari':usuari})
 		else:
 			return render_to_response('usuari.html', {'usuari':usuari})
 
@@ -269,8 +269,8 @@ def borrar(request,id=0):
   	        Hrm.objects.filter(health=id).delete()
 		Health.objects.get(id=id).delete()
 
-		if Master.objects.filter(user=request.user.id).exists():
-			return redirect('/master/')
+		if Main.objects.filter(user=request.user.id).exists():
+			return redirect('/main/')
 		else:
 			return redirect('/usuari/')
 
